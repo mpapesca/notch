@@ -1,23 +1,22 @@
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/components';
+
+import RootDrawerNavigator from './src/navigators/RootNavigator';
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
     return (
-        <ApplicationProvider {...eva} theme={eva.light}>
-            <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text category='h1'>Home</Text>
-            </Layout>
-        </ApplicationProvider>
+        <>
+            <IconRegistry icons={EvaIconsPack} />
+            <ApplicationProvider {...eva} theme={eva.light}>
+                <NavigationContainer>
+                    <RootDrawerNavigator />
+                </NavigationContainer>
+            </ApplicationProvider>
+        </>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
