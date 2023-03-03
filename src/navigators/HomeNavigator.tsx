@@ -2,11 +2,12 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ListsScreen from '../screens/home/ListsScreen';
 import ListDetailScreen from '../screens/home/ListDetailScreen';
+import { TList } from '../data/list';
 
 export type HomeStackParamList = {
     Lists: undefined;
     ListDetail: {
-        title: string;
+        list: TList;
     };
 };
 

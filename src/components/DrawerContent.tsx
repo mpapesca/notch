@@ -11,7 +11,6 @@ const DrawerContent = ({ navigation, state }: DrawerContentComponentProps) => {
                 header={DrawerHeader}
                 selectedIndex={new IndexPath(state.index)}
                 onSelect={(index) => {
-                    console.log({ index, routeNames: state.routeNames });
                     navigation.navigate(state.routeNames[index.row]);
                 }}
             >
