@@ -1,20 +1,11 @@
-import {
-    Text,
-    List,
-    ListItem,
-    Button,
-    Modal,
-    Layout,
-    Input,
-    ButtonGroup,
-    Divider,
-} from '@ui-kitten/components';
+import { Text, ListItem, Button, Input, Card } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { ListRenderItem, ScrollView, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../../navigators/HomeNavigator';
 import { TList } from '../../data/list';
 import * as listApi from '../../apis/list-api';
+import { List, Modal, Screen } from '../../components';
 
 type ListsScreenProps = NativeStackScreenProps<HomeStackParamList, 'Lists'>;
 
@@ -30,16 +21,17 @@ const ListsScreen = ({ navigation }: ListsScreenProps) => {
 
     const renderItem = ({ item: list }: { item: TList }) => {
         return (
-            <ListItem
+            <Card
+                style={{ marginVertical: 8 }}
+                status='primary'
                 onPress={() =>
                     navigation.navigate('ListDetail', {
                         list,
                     })
                 }
-                onLongPress={() => console.log('long press')}
             >
-                <Text category='h2'>{list.title}</Text>
-            </ListItem>
+                <Text category='h3'>{list.title}</Text>
+            </Card>
         );
     };
 
@@ -56,64 +48,30 @@ const ListsScreen = ({ navigation }: ListsScreenProps) => {
 
     const modal = (
         <Modal
-            style={{ width: '90%' }}
+            title='Details'
             visible={visible}
-            backdropStyle={styles.backdrop}
-            onBackdropPress={() => setVisible(false)}
+            animationType='slide'
+            onCancel={() => setVisible(false)}
+            onSubmit={() => saveNewList()}
         >
-            <Layout style={{ flex: 1, padding: 16, borderRadius: 8 }}>
-                <Text style={{ alignSelf: 'center' }} category='h2'>
-                    Details
-                </Text>
-                <View style={{ flex: 1, margin: 8 }}>
-                    <Input
-                        label='Title'
-                        placeholder={`Enter your new list's title...`}
-                        onChangeText={(title) => setNewList({ ...newList, title })}
-                    />
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Button
-                        status='danger'
-                        appearance='outline'
-                        style={{ flex: 1, margin: 8 }}
-                        onPress={() => setVisible(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        status='primary'
-                        style={{ flex: 1, margin: 8 }}
-                        onPress={() => saveNewList()}
-                    >
-                        Save
-                    </Button>
-                </View>
-            </Layout>
+            <Input
+                label={`Title`}
+                placeholder={`Enter your new list's title...`}
+                onChangeText={(title) => setNewList({ ...newList, title })}
+                style={{ marginVertical: 8 }}
+            />
         </Modal>
     );
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <List data={lists} renderItem={renderItem} />
+        <Screen>
+            <List data={lists} renderItem={renderItem as ListRenderItem<unknown>} />
             <Button onPress={openAddModal} style={{ margin: 8 }}>
                 Add
             </Button>
             {modal}
-        </SafeAreaView>
+        </Screen>
     );
 };
-
-const styles = StyleSheet.create({
-    listItem: {
-        fontSize: 32,
-    },
-    container: {
-        maxHeight: 180,
-    },
-    backdrop: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-});
 
 export default ListsScreen;

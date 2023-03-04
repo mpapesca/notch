@@ -1,22 +1,37 @@
 import * as eva from '@eva-design/eva';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/components';
-
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import RootDrawerNavigator from './src/navigators/RootNavigator';
-
-const Drawer = createDrawerNavigator();
+import { ThemeContext } from './src/contexts';
+import { useState } from 'react';
 
 export default function App() {
+    const [themeTitle, setThemeTitle] = useState('light');
+    const [theme, setTheme] = useState(eva.light);
+    const [navTheme, setNavTheme] = useState(DefaultTheme);
+
+    const toggleTheme = () => {
+        console.log('toggle theme');
+        const [nextTheme, nextThemeTitle, nextNavTheme] =
+            themeTitle === 'light'
+                ? [eva.dark, 'dark', DarkTheme]
+                : [eva.light, 'light', DefaultTheme];
+        setThemeTitle(nextThemeTitle);
+        setTheme(nextTheme);
+        setNavTheme(nextNavTheme);
+    };
+
     return (
         <>
             <IconRegistry icons={EvaIconsPack} />
-            <ApplicationProvider {...eva} theme={eva.light}>
-                <NavigationContainer>
-                    <RootDrawerNavigator />
-                </NavigationContainer>
-            </ApplicationProvider>
+            <ThemeContext.Provider value={{ theme, toggleTheme }}>
+                <ApplicationProvider {...eva} theme={theme}>
+                    <NavigationContainer theme={navTheme}>
+                        <RootDrawerNavigator />
+                    </NavigationContainer>
+                </ApplicationProvider>
+            </ThemeContext.Provider>
         </>
     );
 }
